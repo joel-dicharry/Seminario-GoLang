@@ -1,0 +1,36 @@
+package main
+
+import (
+	"fmt"
+	"testing"
+)
+
+func TestAddPassage(t *testing.T) {
+	to := NewTicketOffice()
+	if to.passages == nil {
+		t.Error("La TicketOffice no se creo correctamente")
+	}
+
+	p, err := to.GetByID(1)
+	if err == nil {
+		t.Error("El pasaje con ID = 1, ya existe.")
+	}
+
+	to.AddPassage(Passage{1, 23, "ej. de micro"})
+	p, err = to.GetByID(1)
+	if p.bus != "ej. de micro" {
+		t.Error("El pasaje no se AGREGÓ correctamente.")
+	}
+
+	to.Update(Passage{1, 27, "cambio de ej"})
+	p, err = to.GetByID(1)
+	if p.bus != "cambio de ej" {
+		t.Error("El pasaje no se ACTUALIZÓ correctamente.")
+	}
+
+	to.Delete(1)
+	p, err = to.GetByID(1)
+	if p.bus == "cambio de ej" {
+		fmt.Println("El pasaje no se ELIMINÓ correctamente.")
+	}
+}
